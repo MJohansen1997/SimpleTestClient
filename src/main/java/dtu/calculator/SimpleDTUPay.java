@@ -29,7 +29,7 @@ public class SimpleDTUPay {
         String result = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.TEXT_PLAIN_TYPE)
                 .post(Entity.json(transactionMapper), String.class);
-        return result.contains("Successfull");
+        return result.contains("Successful");
     }
 
     public String createAccount(CreateAccountMapper createAccountMapper) {
@@ -38,7 +38,7 @@ public class SimpleDTUPay {
                .accept(MediaType.TEXT_PLAIN_TYPE)
                .post(Entity.json(createAccountMapper), String.class);
         if(result.contains("Successful"))
-            return result.trim().split(":")[1];
+            return result.split(":")[1].trim();
         throw new IllegalArgumentException(result);
     }
 

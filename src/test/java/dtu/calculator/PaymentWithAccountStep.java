@@ -50,12 +50,7 @@ public class PaymentWithAccountStep {
 
     @When("the merchant initiates a payment for {double} kr by the customer")
     public void theMerchantInitiatesPaymentForBalanceByTheCustomer(double arg0) {
-        tm = new TransactionMapper(merchantId, customerId, "something", BigDecimal.valueOf(arg0));
-    }
-
-    @Then("Then the payment is successful")
-    public void thenThePaymentIsSuccessful() {
-        assertTrue(dtuPay.transaction(tm)); // JUnit 5
+        tm = new TransactionMapper(customerId, merchantId, "something", BigDecimal.valueOf(arg0));
     }
 
     @And("the balance of the customer at the bank is {double} kr")
@@ -74,5 +69,10 @@ public class PaymentWithAccountStep {
     public void cleanUpAccounts() {
         dtuPay.retireAccount(customerId);
         dtuPay.retireAccount(merchantId);
+    }
+
+    @Then("the payment is successful")
+    public void thePaymentIsSuccessful() {
+        assertTrue(dtuPay.transaction(tm));
     }
 }
