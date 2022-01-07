@@ -6,8 +6,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 
-import javax.ws.rs.NotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -20,6 +18,7 @@ public class PaymentSteps {
     boolean successful = false;
     Exception exception;
 
+    /* Scenario: Successful Payment */
     @Given("a customer with id {string}")
     public void aCustomerWithId(String cid) {
         this.cid = cid;
@@ -40,6 +39,7 @@ public class PaymentSteps {
         assertTrue(successful);
     }
 
+    /* Scenario: List of payments */
     @Given("a successful payment of {string} kr from customer {string} to merchant {string}")
     public void aSuccessfulPaymentOfKrFromCustomerToMerchant(String amount, String send, String rec) {
         successful = dtuPay.pay(Integer.parseInt(amount), send, rec);
@@ -56,6 +56,8 @@ public class PaymentSteps {
         assertTrue(dtuPay.findPayment(Integer.parseInt(amount), send, rec));
     }
 
+
+    /* Scenario: Customer is not known */
     @When("the merchant initiates a payment for {string} kr by the customer")
     public void theMerchantInitiatesAPaymentForKrByTheCustomer(String arg0) {
         try {
