@@ -1,6 +1,5 @@
 package dtu.calculator;
 import dtu.ws.fastmoney.*;
-import dtu.ws.fastmoney.ObjectFactory;
 import io.cucumber.java.After;
 import io.cucumber.java.en.*;
 
@@ -18,18 +17,15 @@ public class PaymentWithAccountStep {
     Exception exception;
     CreateAccountMapper customer;
     CreateAccountMapper merchant;
+    AccountService accountService = new AccountService();
     String customerId;
     String merchantId;
     TransactionMapper tm;
 
 
     @Given("a customer with a bank account with balance {double}")
-    public void aCustomerWithABankAccountWithBalance(double arg0) {
-
-//        ObjectFactory objectFactory
-//        = Object;
-        customer = new CreateAccountMapper("customer", "lastName", "123", BigDecimal.valueOf(arg0));
-        customerId = dtuPay.createAccount(customer);
+    public void aCustomerWithABankAccountWithBalance(double arg0) throws BankServiceException_Exception {
+        customerId = accountService.createAccount("customer", "lastName", "123", BigDecimal.valueOf(arg0), true);
     }
 
     @And("that the customer is registered with DTU Pay")
@@ -38,9 +34,8 @@ public class PaymentWithAccountStep {
     }
 
     @Given("a merchant with a bank account with balance {double}")
-    public void aMerchantWithABankAccountWithBalance(double arg0) {
-        merchant = new CreateAccountMapper("merchant", "lastName", "321", BigDecimal.valueOf(arg0));
-        merchantId = dtuPay.createAccount(merchant);
+    public void aMerchantWithABankAccountWithBalance(double arg0) throws BankServiceException_Exception {
+        merchantId = accountService.createAccount("merchant", "lastName", "321", BigDecimal.valueOf(arg0), true);
     }
 
     @And("that the merchant is registered with DTU Pay")
@@ -66,9 +61,9 @@ public class PaymentWithAccountStep {
     }
 
     @After
-    public void cleanUpAccounts() {
-        dtuPay.retireAccount(customerId);
-        dtuPay.retireAccount(merchantId);
+    public void cleanUpAccounts() throws BankServiceException_Exception {
+        accountService.retireAccount(customerId);
+        accountService.retireAccount(merchantId);
     }
 
     @Then("the payment is successful")
